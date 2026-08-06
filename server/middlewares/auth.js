@@ -56,8 +56,41 @@ exports.isStudent=async(req,res,next)=>{
     }
 }
 //isInstructor
-//isAdmin
+exports.isInstructor=async(req,res,next)=>{
+    try{
+        if(req.user.accountType !=="Instructor"){
+            return res.status(401).json({
+                success:false,
+                message:"this is protected route for the Instructor Only",
+            });
+        }
+        next();
 
+    }catch(error){
+        return res.response(501).json({
+            success:false,
+            message:"User cannot be verified, please try again",
+        })
+    }
+}
+//isAdmin
+exports.isAdmin=async(req,res,next)=>{
+    try{
+        if(req.user.accountType !=="Admin"){
+            return res.status(401).json({
+                success:false,
+                message:"this is protected route for the Admin Only",
+            });
+        }
+        next();
+
+    }catch(error){
+        return res.response(501).json({
+            success:false,
+            message:"User cannot be verified, please try again",
+        })
+    }
+}
 
 
 
