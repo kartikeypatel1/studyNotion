@@ -1,5 +1,5 @@
 const Course = require("../models/Course");
-const Tag = require("../models/Tags");
+const Tag = require("../models/Cateogary");
 const User = require("../models/User");
 const {uploadImageCloudinary}=require("../utils/imageUploader");
 
@@ -21,6 +21,7 @@ exports.createCourse=async(req,res)=>{
             })
         }
         //check for intructor
+        //check this
         const userid=req.user.id;
         const instructorDetails=await User.findById(userid);
         console.log("Instructor Details",instructorDetails);
@@ -104,7 +105,7 @@ exports.createCourse=async(req,res)=>{
 
 // get all courses handler function
 
-exports.getAllCourses=async(req,res)=>{
+exports.getAllCourse=async(req,res)=>{
     try{
         const allCourses=await Course.find({},{
             courseName:true,
