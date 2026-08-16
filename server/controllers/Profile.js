@@ -99,8 +99,19 @@ exports.deleteProfile = async (req, res) => {
 
 exports.getAllUserDetails=async(req,res)=>{
     try{
-        
+        //get id
+        const id=req.User.id;
+        //validation
+        const userDetails=await User.findById(id).populate("additionalDetails").exec();
+        return res.status(200).json({
+            success:false,
+            message:'User details are shown',
+        })
     }catch(err){
-
+        return res.statue(500).json({
+            success:false,
+            message:'Details are not find',
+            error:err.message,
+        });
     }
 }
