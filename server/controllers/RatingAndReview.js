@@ -99,4 +99,70 @@ exports.createRating = async (req, res) => {
         });
     }
 };
+//average rating
+
+exports.getAverageRating = async (req, res) => {
+    try {
+        // Get course ID
+        const { courseId } = req.body;
+
+        // Validation
+        if (!courseId) {
+            return res.status(400).json({
+                success: false,
+                message: "Course ID is required",
+            });
+        }
+
+        // Check course
+        const courseDetails = await Course.findById(courseId);
+
+        if (!courseDetails) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found",
+            });
+        }
+
+        // Find all ratings for this course
+        const ratings = await RatingAndReview.find({
+            courseId: courseId,
+        });
+
+        // If no ratings
+        if (ratings.length === 0) {
+            return res.status(200).json({
+                success: true,
+                message: "No ratings available for this course",
+                averageRating: 0,
+            });
+        }
+
+        // Calculate total rating
+        const totalRating = ratings.reduce(
+            (sum, rating) => sum + rating.rating,
+            0
+        );
+
+        // Calculate average
+        const averageRating = totalRating / ratings.length;
+
+        return res.status(200).json({
+            success: true,
+            message: "Average rating fetched successfully",
+            averageRating: Number(averageRating.toFixed(1)),
+            totalRatings: ratings.length,
+        });
+
+    } catch (err) {
+        console.error("Error fetching average rating:", err);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to fetch average rating",
+            error: err.message,
+        });
+    }
+};
+
 
