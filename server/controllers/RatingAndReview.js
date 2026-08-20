@@ -166,3 +166,60 @@ exports.getAverageRating = async (req, res) => {
 };
 
 
+// =====================================================
+// GET ALL RATINGS
+// =====================================================
+
+exports.getAllRating = async (req, res) => {
+    try {
+        // Get course ID
+        const { courseId } = req.body;
+
+        // Validation
+        if (!courseId) {
+            return res.status(400).json({
+                success: false,
+                message: "Course ID is required",
+            });
+        }
+
+        // Check course
+        const courseDetails = await Course.findById(courseId);
+
+        if (!courseDetails) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found",
+            });
+        }
+
+        // Get all ratings and reviews
+        const allRatings = await RatingAndReview.find({
+            courseId: courseId,
+        })
+            .populate({
+                path: "user",
+                select: "firstName lastName email image",
+            })
+            .populate({
+                path: "courseId",
+                select: "courseName thumbnail",
+            })
+            .exec();
+
+        return res.status(200).json({
+            success: true,
+            message: "All ratings and reviews fetched successfully",
+            data: allRatings,
+        });
+
+    } catch (err) {
+        console.error("Error fetching ratings:", err);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to fetch ratings and reviews",
+            error: err.message,
+        });
+    }
+};
