@@ -129,3 +129,65 @@ exports.getAllCourse=async(req,res)=>{
         })
     }
 }
+
+exports.getCourseDetails = async (req, res) => {
+    try {
+        // Get course ID from params
+        const { courseId } = req.params;
+
+        // Validate course ID
+        if (!courseId) {
+            return res.status(400).json({
+                success: false,
+                message: "Course ID is required",
+            });
+        }
+
+        // Find course and populate all required details
+        const courseDetails = await Course.findById(courseId)
+            .populate({
+                path: "instructor",
+                select: "-password -__v",
+            })
+            .populate({
+                path: "tag",
+                select: "name description courses",
+            })
+            .populate({
+                path: "ratingAndReviews",
+                populate: {
+                    path: "user",
+                    select: "firstName lastName email image",
+                },
+            })
+            .populate({
+                path: "studentsEnrolled",
+                select: "firstName lastName email image",
+            })
+            .exec();
+
+        // Course not found
+        if (!courseDetails) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found",
+            });
+        }
+
+        // Send course details
+        return res.status(200).json({
+            success: true,
+            message: "Course details fetched successfully",
+            data: courseDetails,
+        });
+
+    } catch (err) {
+        console.error("Error fetching course details:", err);
+
+        return res.status(500).json({
+            success: false,
+            message: "Cannot fetch course details",
+            error: err.message,
+        });
+    }
+};
