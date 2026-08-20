@@ -86,3 +86,77 @@ exports.capturePayment=async(req,res)=>{
     }
     //return response
 }
+
+
+//verify signature of razorpay and server
+
+
+exports.varifySignature=async(req,res)=>{
+    
+        const webhookSecret="12345678";
+
+        const signature=req.headers["x-razorpay-signature"];
+        crypto.createHmac("sha256",webhookSecret);
+        shashum.update(JSON.stringify(req.body));
+        const digest=shashum.digest("hex");
+
+
+        if(signature===digest){
+            console.log("Payment is Authorised");
+
+            const{courseId,userId}=req.body.payload.payment.entity.notes;
+
+            try{
+                //fulfill the action
+
+                //find the student and enroll the student in course
+
+                const enrolledCourse=await Course.findOneAndUpdate(
+                    {_id:courseId},
+                    {$push:{studentsEnrolled:userId}},
+                    {new:true}
+    );
+    if(!enrolledCourse){
+        return res.status(500).json({
+            success:false,
+            message:"Course not Found",
+        })
+    }
+    console.log(enrolledCourse);
+    //find the stundent and course ito their list enrolled course 
+    const enrolledStudent=await User.findOneAndUpdate(
+        {_id:userId},
+        {$push:{courses:courseId}},
+        {new:true},
+    );
+    console.log(enrolledCourse);
+    //mail send krna confirmation vala mail
+
+    const emailResponse=await mailSender(
+        enrolledStudent.email,
+        "Congratulation from the StudyNotion",
+        "Congratulation , you are onboarded into new codehelp course",
+
+    );
+
+    console.log(email);
+    return res.status(200).json({
+        success:true,
+        message:"Signature verified and course added"
+    });
+            }catch(error){
+                console.log(error);
+                return res.status(500).json({
+                    success:false,
+                    message:error.message,
+                });
+            }
+        }
+else{
+    return res.status(400).json({
+        success:false,
+        message:"Signature is not verified",
+    });
+}
+    
+}
