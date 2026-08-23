@@ -1,14 +1,16 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const cookieParser = require("cookie-parser");
-const { connect } = require("./config/database");
+const express=require('express');
+const app=express();
 
-dotenv.config();
-const app = express();
-const PORT = process.env.PORT || 5000;
+const userRoutes=require("./routes/User");
+const profileRoutes=require("./routes/Profile");
+const paymentRoutes=require("./routes/Payment");
+const courseRoutes=require("./routes/Course");
 
-app.use(cookieParser());
-connect();
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+
+const database=require('./config/database');
+const cookieParser=require("cookie-parser");
+const cors=require("cors");
+
+const {cloudinaryConnect}=require("./config/cloudinary");
+const fileUpload=require("express-fileupload");
+const dotenv=require("dotenv");
