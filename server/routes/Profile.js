@@ -1,25 +1,24 @@
-const express = require("express")
-const router = express.Router()
-const { auth, isInstructor, isStudent } = require("../middlewares/auth")
+const express = require("express");
+
+const router = express.Router();
+
+// Import controllers
 const {
-  deleteAccount,
-  updateProfile,
-  getUserAllDetails,
-  updateDisplayPicture,
-  getEnrolledCourses,
-  instructorDashboard,
-} = require("../controllers/profile")
+    updateProfile,
+    deleteProfile,
+    getAllUserDetails,
+} = require("../controllers/Profile");
 
-// ********************************************************************************************************
-//                                      Profile routes
-// ********************************************************************************************************
-// Delet User Account
-router.delete("/deleteProfile", auth, deleteAccount)
-router.put("/updateProfile", auth, updateProfile)
-router.get("/getUserDetails", auth, getUserAllDetails)
-// Get Enrolled Courses
-router.get("/getEnrolledCourses", auth,isStudent, getEnrolledCourses)
-router.put("/updateDisplayPicture", auth, updateDisplayPicture)
-router.get("/instructorDashboard", auth, isInstructor, instructorDashboard)
+// Import authentication middleware
+const { auth } = require("../middlewares/auth");
 
-module.exports = router
+// Update profile
+router.put("/updateProfile", auth, updateProfile);
+
+// Delete profile
+router.delete("/deleteProfile", auth, deleteProfile);
+
+// Get user details
+router.get("/getUserDetails", auth, getAllUserDetails);
+
+module.exports = router;
