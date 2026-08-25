@@ -1,6 +1,6 @@
 const cloudinary = require("cloudinary").v2;
 
-exports.uploadImageCloudinary = async (
+exports.uploadImageToCloudinary = async (
     file,
     folder,
     height,
