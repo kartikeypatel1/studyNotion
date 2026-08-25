@@ -1,9 +1,8 @@
 const SubSection=require('../models//SubSection');
 const Section=require('../models/Section');
 const Course=require('../models/Course');
-const { tryWrapperForImpl } = require('jsdom/lib/generated/idl/utils');
 const { uploadImageCloudinary } = require('../utils/imageUploader');
-const { SOURCE_CACHE } = require('firebase/data-connect');
+
 
 
 //create subsection
@@ -14,7 +13,7 @@ exports.createSubSection=async(req,res)=>{
 
         const {sectionId,title,timeDuration, description}=req.body;
         //extract file/video
-        const video=req.file.videoFile;
+        const video=req.files.videoFile;
         //validation
         if(!sectionId||!title||!timeDuration||!description||!video){
             return res.status(400).json({

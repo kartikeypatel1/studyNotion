@@ -8,14 +8,10 @@ const router = express.Router();
 // ========================================
 
 const {
-    createCourse,
+   createCourse,
     showAllCourses,
     getCourseDetails,
-    editCourse,
-    getInstructorCourses,
-    deleteCourse,
-    getFullCourseDetails,
-} = require("../controllers/course");
+} = require("../controllers/Course");
 
 
 // ========================================
@@ -45,7 +41,7 @@ const {
 // ========================================
 
 const {
-    createSubsection,
+    createSubSection,
     updateSubSection,
     deleteSubSection,
 } = require("../controllers/subsection");
@@ -57,7 +53,7 @@ const {
 
 const {
     createRating,
-    getAvgRating,
+   getAverageRating,
     getAllRating,
 } = require("../controllers/ratingandreview");
 
@@ -128,7 +124,7 @@ router.post(
     "/addSubSection",
     auth,
     isInstructor,
-    createSubsection
+    createSubSection
 );
 
 
@@ -152,51 +148,47 @@ router.post(
 
 // Get all courses
 router.get(
-    "/getAllCourses",
+    "/showAllCourses",
     showAllCourses
 );
 
 
-// Get course details
-router.post(
-    "/getCourseDetails",
-    getCourseDetails
-);
+
 
 
 // Get full course details
 router.post(
-    "/getFullCourseDetails",
+    "/getCourseDetails",
     auth,
-    getFullCourseDetails
+    getCourseDetails
 );
 
 
-// Edit course
-router.put(
-    "/editCourse",
-    auth,
-    isInstructor,
-    editCourse
-);
+// // Edit course
+// router.put(
+//     "/editCourse",
+//     auth,
+//     isInstructor,
+
+// );
 
 
 // Get instructor courses
-router.get(
-    "/getInstructorCourses",
-    auth,
-    isInstructor,
-    getInstructorCourses
-);
+// router.get(
+//     "/getInstructorCourses",
+//     auth,
+//     isInstructor,
+//     getInstructorCourses
+// );
 
 
 // Delete course
-router.delete(
-    "/deleteCourse",
-    auth,
-    isInstructor,
-    deleteCourse
-);
+// router.delete(
+//     "/deleteCourse",
+//     auth,
+//     isInstructor,
+//     deleteCourse
+// );
 
 
 // Update course progress
@@ -249,7 +241,7 @@ router.post(
 
 router.get(
     "/getAverageRating",
-    getAvgRating
+    getAverageRating
 );
 
 
